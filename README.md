@@ -2,7 +2,7 @@
 
 Deux petits scripts qui permettent de:
 
-* Générer une liste de "donner"/"receveur" de cadeau sur la base d'un fichier
+* Générer une liste de paires "donneur"/"receveur" de cadeau sur la base d'un fichier
   CSV contenant les noms et coordonnées des participants;
 * Envoyer automatiquement un mail à tous les participants pour leur dire à qui
   envoyer leur cadeau.
