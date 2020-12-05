@@ -1,4 +1,4 @@
-#! python3
+#!/usr/bin/env python3
 
 from generate_list import SimplePerson
 from email.mime.text import MIMEText

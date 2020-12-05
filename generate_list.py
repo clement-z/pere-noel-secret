@@ -1,4 +1,4 @@
-#! python3
+#!/usr/bin/env python3
 
 """
 Generate list for secret santa from a (well-formed) CSV file
