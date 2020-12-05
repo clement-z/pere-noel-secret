@@ -10,7 +10,7 @@ from subprocess import Popen, PIPE
 
 domain = 'zrounba.fr'
 sender_name = 'Le Père Joël'
-sender_email = 'pere.noel+donotreply@'+domain
+sender_email = 'pere.joel+donotreply@'+domain
 mail_subject_fmt = 'Père Noël hétérogène'
 mail_body_fmt = '''Bonjour {gifter.name},
 
