@@ -1,9 +1,9 @@
 #! python3
 
 """
-Generate list for secret santa from CSV
+Generate list for secret santa from a (well-formed) CSV file
 
-* Read people info from CSV file
+* Read people info from CSV file (see example provided)
 * Assign to each another person at random
 * Write the output as pairs of SimplePersons to results.pkl
 
@@ -15,6 +15,10 @@ import csv
 import random
 import pickle
 
+"""
+Simple person class to hold name, email...
+This is not really needed, but improves readability
+"""
 class SimplePerson():
     def __init__(self, name='', email='', address='', tel='', gender=''):
         self.name = name
@@ -26,6 +30,9 @@ class SimplePerson():
     def __str__(self):
         return '[' + ' | '.join([self.name, self.email, self.address, self.tel, self.gender]) + ']'
 
+"""
+Read CSV → Shuffle order → Save results
+"""
 def main(coords_file='coords.csv', results_file='results.pkl', verbose=False):
     with open(coords_file) as f:
         coords_rdr = csv.reader(f, delimiter='|')
@@ -64,4 +71,5 @@ def main(coords_file='coords.csv', results_file='results.pkl', verbose=False):
         pickle.dump(results, f)
 
 if __name__ == '__main__':
-    main(verbose=True)
+    main()
+    #main(verbose=True)
