@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+import pickle
 from generate_list import SimplePerson
 from email.mime.text import MIMEText
-import pickle
+from subprocess import Popen, PIPE
 
 mail_subject_fmt = 'Père Noël secret de la bande hétérogène'
 mail_body_fmt = '''
@@ -44,9 +45,7 @@ def main(do_it=False):
         if do_it:
             p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
             p.communicate(msg.as_bytes())
-            status = p.close()
-            print('sendmail status:', status)
 
 if __name__ == '__main__':
-    #main(do_it=True)
-    main()
+    main(do_it=True)
+    #main()
