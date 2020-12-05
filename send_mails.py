@@ -4,7 +4,7 @@ from generate_list import SimplePerson
 from email.mime.text import MIMEText
 import pickle
 
-mail_subject_fmt = 'Père noël secret de la bande hétérogène'
+mail_subject_fmt = 'Père Noël secret de la bande hétérogène'
 mail_body_fmt = '''
 Salut {gifter.name},
 
@@ -25,24 +25,28 @@ Bisous et en te souhaitant un joyeux noël,
 Python et sendmail
 '''
 
-with open('results.pkl', 'rb') as f:
-    results = pickle.load(f)
+def main(do_it=False):
+    with open('results.pkl', 'rb') as f:
+        results = pickle.load(f)
 
-for result in results:
-    gifter = result[0]
-    gifted = result[1]
+    for result in results:
+        gifter = result[0]
+        gifted = result[1]
 
-    #mail_body = mail_body_fmt.format(gifter=result[0], gifted=result[1])
-    mail_body = mail_body_fmt.format(gifter=gifter, gifted=gifted)
-    msg = MIMEText(mail_body)
-    msg['From'] = 'pere.noel.donotreply@pere.noel.zrounba.fr'
-    msg['To'] = gifter.email
-    msg['Subject'] = mail_subject_fmt.format()
-    print(msg)
-    
-    p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
-    p.communicate(msg.as_bytes())
-    status = p.close()
-    print('sendmail status:', status)
+        #mail_body = mail_body_fmt.format(gifter=result[0], gifted=result[1])
+        mail_body = mail_body_fmt.format(gifter=gifter, gifted=gifted)
+        msg = MIMEText(mail_body)
+        msg['From'] = 'Le Père Noël <pere.noel+donotreply@zrounba.fr>'
+        msg['To'] = f'{gifter.name} <{gifter.email}>'
+        msg['Subject'] = mail_subject_fmt.format()
+        print(msg)
+        
+        if do_it:
+            p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
+            p.communicate(msg.as_bytes())
+            status = p.close()
+            print('sendmail status:', status)
 
-
+if __name__ == '__main__':
+    #main(do_it=True)
+    main()
