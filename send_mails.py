@@ -3,6 +3,7 @@
 import os
 import pickle
 from generate_list import SimplePerson
+from generate_list import main as generate
 from email.message import EmailMessage
 from email.generator import BytesGenerator
 from email.policy import EmailPolicy
@@ -81,14 +82,16 @@ def main(do_it=False):
             print(msg)
             print('-'*78)
 
-    if do_it:
-        if i != n:
-            print('Not all mails were sent.')
-        os.remove('results.pkl')
+    if do_it and i != n:
+        print('There were some errors sending the mails')
+
+    os.remove('results.pkl')
 
 
 if __name__ == '__main__':
     import sys
+    if not os.path.exists('results.pkl'):
+        generate()
     if len(sys.argv) == 2 and sys.argv[1] == '--ok':
         main(do_it=True)
     else:
