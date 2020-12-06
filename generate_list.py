@@ -46,24 +46,28 @@ def main(coords_file='coords.csv', results_file='results.pkl', blacklist_file='b
             coords.append(row)
             persons.append(SimplePerson(*row))
 
+    n = len(coords)
+    id_from = list(range(n))
+    id_to = list(range(n))
+
+    print(f'[INFO] Found {n} valid entries in {coords_file}:')
+    print('\n'.join(['[INFO]\t- ' + str(person) for person in persons]))
+
     rules = []
     if os.path.exists(blacklist_file):
         with open(blacklist_file, 'r') as f:
             for line in f:
                 ids = [int(x) for x in line.split(' ')]
-                print(f'{persons[ids[0]].name} will not be matched with {persons[ids[1]].name}')
-                if len(ids) != 2:
-                    print('invalid rule found')
+                if len(ids) != 2 or ids[0] == ids[1]:
+                    print(f'[ERROR] invalid rule found (need only two different integers separated by spaces): {line:r}')
+                    return 1
+                if ids[0] >= len(persons) or ids[1] >= len(persons):
+                    print(f'[ERROR] rule refers to persons #{ids[0]} and #{ids[1]} but only {len(persons)} specified in coords file: {line:r}')
                     return 1
                 rules.append(set(ids))
-
-    n = len(coords)
-    id_from = list(range(n))
-    id_to = list(range(n))
-
-    if verbose:
-        print(f'Found {n} persons:')
-        print("\n".join(['\t' + str(person) for person in persons]))
+        print(f'[INFO] Found {len(rules)} valid rules in {blacklist_file}:')
+        for rule in rules:
+            print(f'[INFO]\t- {persons[list(rule)[0]].name} will not be matched with {persons[list(rule)[1]].name}')
 
     valid_output = False
     while not valid_output:
@@ -76,9 +80,9 @@ def main(coords_file='coords.csv', results_file='results.pkl', blacklist_file='b
                 break
 
     if verbose:
-        print('Results:')
+        print('[DEBUG] Results:')
         for (i,j) in zip(id_from, id_to):
-            print(f'{persons[i].name} → {persons[j].name} ({", ".join([persons[j].address, persons[j].tel]).strip(" ")})')
+            print(f'[DEBUG]\t- {persons[i].name} → {persons[j].name} ({", ".join([persons[j].address, persons[j].tel]).strip(" ")})')
 
     results = []
     for (i,j) in zip(id_from, id_to):
