@@ -11,6 +11,7 @@ By default, nothing is printed to stdout, only the pickled results are saved to
 disk, to be reused with a script to send emails to the participants.
 """
 
+import os
 import csv
 import random
 import pickle
@@ -33,7 +34,7 @@ class SimplePerson():
 """
 Read CSV → Shuffle order → Save results
 """
-def main(coords_file='coords.csv', results_file='results.pkl', verbose=False):
+def main(coords_file='coords.csv', results_file='results.pkl', blacklist_file='blacklist.txt', verbose=False):
     with open(coords_file) as f:
         coords_rdr = csv.reader(f, delimiter='|')
         coords = []
@@ -45,6 +46,17 @@ def main(coords_file='coords.csv', results_file='results.pkl', verbose=False):
             coords.append(row)
             persons.append(SimplePerson(*row))
 
+    rules = []
+    if os.path.exists(blacklist_file):
+        with open(blacklist_file, 'r') as f:
+            for line in f:
+                ids = [int(x) for x in line.split(' ')]
+                print(f'{persons[ids[0]].name} will not be matched with {persons[ids[1]].name}')
+                if len(ids) != 2:
+                    print('invalid rule found')
+                    return 1
+                rules.append(set(ids))
+
     n = len(coords)
     id_from = list(range(n))
     id_to = list(range(n))
@@ -53,10 +65,15 @@ def main(coords_file='coords.csv', results_file='results.pkl', verbose=False):
         print(f'Found {n} persons:')
         print("\n".join(['\t' + str(person) for person in persons]))
 
-    while True:
+    valid_output = False
+    while not valid_output:
         random.shuffle(id_to)
-        if all([a != b for (a,b) in zip(id_from, id_to)]):
-            break
+        valid_output = True
+        for (a,b) in zip(id_from, id_to):
+            rule_broken = set((a,b)) in rules
+            if rule_broken or a == b:
+                valid_output = False
+                break
 
     if verbose:
         print('Results:')
